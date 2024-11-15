@@ -14,6 +14,7 @@ import java.sql.Statement;
  * 
  */
 public class Main {
+	
 	public static final String URL = "jdbc:mysql://dns11036.phdns11.es:3306/ad2425_nruiz";
 	public static final String USUARIO = "nruiz";
 	public static final String CONTRASENYA = "12345";

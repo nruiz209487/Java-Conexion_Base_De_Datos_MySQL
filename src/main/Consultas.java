@@ -342,7 +342,9 @@ public class Consultas {
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
 			stmt = conn.createStatement();
-			String sql = " ALTER TABLE personas ADD laboral VARCHAR(20);";
+			String sql = "ALTER TABLE personas \r\n"
+					+ "ADD laboral VARCHAR(20), \r\n"
+					+ "ADD CONSTRAINT chk_valores_validos CHECK (laboral IN ('estudiantes', 'jubilados', 'parados', 'ocupados'));";
 			stmt.executeUpdate(sql);
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -369,7 +371,7 @@ public class Consultas {
 			sql = "UPDATE personas SET laboral = 'parados' WHERE edad < 65 and edad > 18 and edad%2=0;";
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
-			sql = "UPDATE personas SET laboral = 'otros' WHERE edad < 65 and edad > 18 and edad%2!=0";
+			sql = "UPDATE personas SET laboral = 'ocupados' WHERE edad < 65 and edad > 18 and edad%2!=0";
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
 			System.out.println("Registro actualizado correctamente.");
@@ -386,7 +388,44 @@ public class Consultas {
 			} catch (SQLException se) {
 				System.out.println("No se ha podido cerrar la conexión.");
 			}
+			Consultas.consultaTabla();
 		}
 	}
 
+	public static void consultaTabla() throws SQLException {
+		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			System.out.println("Consultando la tabla personas...");
+			String sql = "SELECT id, nombre, apellido, edad, laboral FROM personas order by edad ;";
+
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String nombre = rs.getString("nombre");
+				String apellido = rs.getString("apellido");
+				int edad = rs.getInt("edad");
+				String laboral = rs.getString("laboral");
+				System.out.println("ID: " + id + ", Nombre: " + nombre + ", Apellido: " + apellido + ", Edad: " + edad+ ", Laboral: " + laboral);
+			}
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				System.out.println("No se ha podido cerrar la conexión o el ResultSet.");
+				se.printStackTrace();
+			}
+		}
+	}
 }

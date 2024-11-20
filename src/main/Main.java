@@ -21,13 +21,12 @@ public class Main {
 	public static final String CONTRASENYA = "12345";
 
 	public static final void main(String[] args) throws Exception {
-		updateTabla();
-		// crecionTabla(); inicializarTabla() ;
-		consultaTabla();
+		// las actividades van de la 1 a la 11
+		Consultas.consultaTablaAct1();
+
 	}
 
 	public static void consultaTabla() throws SQLException {
-		// Probar conexión y obtener conexión a la base de datos
 		probarConexion();
 		Connection conn = DriverManager.getConnection(URL, USUARIO, CONTRASENYA);
 		Statement stmt = null;
@@ -35,27 +34,22 @@ public class Main {
 
 		try {
 			System.out.println("Consultando la tabla personas...");
-			// Consulta SQL para seleccionar todos los registros
 			String sql = "SELECT id, nombre, apellido, edad FROM personas;";
 
-			// Crear Statement y ejecutar la consulta
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 
-			// Procesar los resultados
 			while (rs.next()) {
 				int id = rs.getInt("id");
 				String nombre = rs.getString("nombre");
 				String apellido = rs.getString("apellido");
 				int edad = rs.getInt("edad");
 
-				// Imprimir los datos de cada registro
 				System.out.println("ID: " + id + ", Nombre: " + nombre + ", Apellido: " + apellido + ", Edad: " + edad);
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
 		} finally {
-			// Cerrar recursos
 			try {
 				if (rs != null)
 					rs.close();

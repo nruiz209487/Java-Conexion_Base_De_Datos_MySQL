@@ -22,7 +22,7 @@ public class Main {
 
 	public static final void main(String[] args) throws Exception {
 		// las actividades van de la 1 a la 11
-		Consultas.consultaTablaAct11();
+		Consultas.consultaTablaAct12();
 
 	}
 

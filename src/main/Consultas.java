@@ -428,4 +428,42 @@ public class Consultas {
 			}
 		}
 	}
+	
+	public static void consultaTablaAct12() throws SQLException {
+		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			System.out.println("Consultando la tabla personas...");
+			String sql = " SELECT id, nombre, apellido, edad FROM personas WHERE edad>44 AND apellido LIKE  '%pa%' or  apellido LIKE  '%ma%' order by edad asc;";
+
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String nombre = rs.getString("nombre");
+				String apellido = rs.getString("apellido");
+				int edad = rs.getInt("edad");
+
+				System.out.println("ID: " + id + ", Nombre: " + nombre + ", Apellido: " + apellido + ", Edad: " + edad);
+			}
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se) {
+				System.out.println("No se ha podido cerrar la conexión o el ResultSet.");
+				se.printStackTrace();
+			}
+		}
+	}
+
 }

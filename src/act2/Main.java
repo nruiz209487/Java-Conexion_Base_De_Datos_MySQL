@@ -18,6 +18,7 @@ public class Main {
 	public static final String CONTRASENYA = "12345";
 
 	public static final void main(String[] args) throws Exception {
+
 		String str = "2024-11-27";
 		Date date = Date.valueOf(str);
 		probarConexion();

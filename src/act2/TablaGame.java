@@ -9,7 +9,6 @@ import java.sql.Statement;
 
 public class TablaGame {
 
-	// Método para crear la tabla Games
 	public static void creacionTablaGames() {
 		String sql = "CREATE TABLE IF NOT EXISTS Games (" + "idGames INT PRIMARY KEY, " + // Sin AUTO_INCREMENT
 				"Nombre VARCHAR(45) NOT NULL, " + "tiempoJugado TIME" + ");";
@@ -59,7 +58,6 @@ public class TablaGame {
 		}
 	}
 
-	// Método para consultar los datos de la tabla Games
 	public static void consultaTablaGames() {
 		String sql = "SELECT idGames, Nombre, tiempoJugado FROM Games;";
 
@@ -87,8 +85,8 @@ public class TablaGame {
 		PreparedStatement stmt = null;
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
-			String sql = "INSERT INTO Games (idGames, Nombre, tiempoJugado) VALUES (" 
-			           + idGames + ", '" + nombre + "', '" + tiempoJugado + "');";
+			String sql = "INSERT INTO Games (idGames, Nombre, tiempoJugado) VALUES (" + idGames + ", '" + nombre
+					+ "', '" + tiempoJugado + "');";
 
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
@@ -109,13 +107,14 @@ public class TablaGame {
 			}
 		}
 	}
+
 	public static void updateTabla(String campo, String nuevoValor, String filtro) throws Exception {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		PreparedStatement stmt = null;
 
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
-			String sql = "UPDATE Games SET " + campo + " = " + nuevoValor + " WHERE " + filtro; 
+			String sql = "UPDATE Games SET " + campo + " = " + nuevoValor + " WHERE " + filtro;
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
 
@@ -136,7 +135,6 @@ public class TablaGame {
 		}
 	}
 
-	// Método para eliminar la tabla Games
 	public static void eliminarTablaGames() {
 		String sql = "DROP TABLE IF EXISTS Games;";
 

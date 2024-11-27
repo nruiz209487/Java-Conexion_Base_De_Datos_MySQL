@@ -10,9 +10,9 @@ import java.sql.Statement;
 
 public class TablaCompras {
 
-	// Método para crear la tabla Compras
+
 	public static void creacionTablaCompras() {
-		String sql = "CREATE TABLE IF NOT EXISTS Compras (" + "idCompra INT PRIMARY KEY, " + // Sin AUTO_INCREMENT
+		String sql = "CREATE TABLE IF NOT EXISTS Compras (" + "idCompra INT PRIMARY KEY, " + 
 				"idPlayer INT NOT NULL, " + "idGames INT NOT NULL, " + "Cosa VARCHAR(25), " + "Precio DECIMAL(6,2), "
 				+ "FechaCompra DATE, " + "FOREIGN KEY (idPlayer) REFERENCES Player(idPlayer), "
 				+ "FOREIGN KEY (idGames) REFERENCES Games(idGames)" + ");";
@@ -64,7 +64,7 @@ public class TablaCompras {
 		}
 	}
 
-	// Método para consultar la tabla Compras
+
 	public static void consultaTablaCompras() {
 		String sql = "SELECT idCompra, idPlayer, idGames, Cosa, Precio, FechaCompra FROM Compras;";
 
@@ -147,7 +147,6 @@ public class TablaCompras {
 		}
 	}
 
-	// Método para eliminar la tabla Compras
 	public static void eliminarTablaCompras() {
 		String sql = "DROP TABLE IF EXISTS Compras;";
 

@@ -15,9 +15,7 @@ public class TablaPlayer {
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
 			stmt = conn.createStatement();
-
-			// Crear tabla Player sin AUTO_INCREMENT
-			sql = "CREATE TABLE Player (" + "idPlayer INT PRIMARY KEY, " + // Sin AUTO_INCREMENT
+			sql = "CREATE TABLE Player (" + "idPlayer INT PRIMARY KEY, " + 
 					"Nick VARCHAR(45) NOT NULL, " + "password VARCHAR(128) NOT NULL, " + "email VARCHAR(100) NOT NULL"
 					+ ");";
 			stmt.executeUpdate(sql);

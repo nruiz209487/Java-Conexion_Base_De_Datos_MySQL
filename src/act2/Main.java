@@ -21,7 +21,9 @@ public class Main {
 
 		String str = "2024-11-27";
 		Date date = Date.valueOf(str);
+
 		probarConexion();
+
 		TablaGame.creacionTablaGames();
 		TablaPlayer.creacionTablaPlayer();
 		TablaCompras.creacionTablaCompras();

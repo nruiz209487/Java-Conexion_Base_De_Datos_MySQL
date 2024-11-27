@@ -1,7 +1,7 @@
 /**
  * 
  */
-package main;
+package act1;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -119,7 +119,7 @@ public class Main {
 			System.out.println("Eliminacion correcta");
 		}
 	}
-
+ 
 	public static void inicializarTabla() throws Exception {
 		Connection conn = DriverManager.getConnection(URL, USUARIO, CONTRASENYA);
 		PreparedStatement stmt = null;

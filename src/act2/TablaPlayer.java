@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class TablaPlayer {
+	/**
+	 * * Crea la tabla en la BD
+	 */
 	public static void creacionTablaPlayer() throws Exception {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		Statement stmt = null;
@@ -15,9 +18,8 @@ public class TablaPlayer {
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
 			stmt = conn.createStatement();
-			sql = "CREATE TABLE Player (" + "idPlayer INT PRIMARY KEY, " + 
-					"Nick VARCHAR(45) NOT NULL, " + "password VARCHAR(128) NOT NULL, " + "email VARCHAR(100) NOT NULL"
-					+ ");";
+			sql = "CREATE TABLE Player (" + "idPlayer INT AUTO_INCREMENT  PRIMARY KEY, " + "Nick VARCHAR(45) NOT NULL, "
+					+ "password VARCHAR(128) NOT NULL, " + "email VARCHAR(100) NOT NULL" + ");";
 			stmt.executeUpdate(sql);
 
 			System.out.println("Creación de tablas completada correctamente.");
@@ -33,23 +35,29 @@ public class TablaPlayer {
 		}
 	}
 
+	/**
+	 * INSERTA UNA SERIE DE VALORES EN LA TABLA (SIMPLEMENTE PARA TENER ALGO CON LO
+	 * QUE TRABAJAR )
+	 * 
+	 * @throws Exception
+	 */
 	public static void inicializarTabla() throws Exception {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		PreparedStatement stmt = null;
 		String sql = "";
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
-			sql = "INSERT INTO Player (idPlayer ,Nick, password, email) VALUES "
-					+ "(1,'GamerX', 'securePass123', 'gamerx@example.com'), "
-					+ "(2,'ProPlayer77', 'propass77', 'proplayer77@example.com'), "
-					+ "(3,'NoobMaster', 'noob12345', 'noobmaster@example.com'), "
-					+ "(4,'EliteGamer', 'eliteG@me!', 'elitegamer@example.com'), "
-					+ "(5,'FastClicker', 'clicker9876', 'fastclicker@example.com'), "
-					+ "(6,'SharpShooter', 'sh@rpShooter', 'sharpshooter@example.com'), "
-					+ "(7,'StealthKing', 'ste@lthRocks', 'stealthking@example.com'), "
-					+ "(8,'BattleQueen', 'queenBattle9', 'battlequeen@example.com'), "
-					+ "(9,'Strategist99', 'planAhead99', 'strategist99@example.com'), "
-					+ "(10,'SpeedyGonzalez', 'speedPass!23', 'speedygonzalez@example.com');";
+			sql = "INSERT INTO Player (Nick, password, email) VALUES "
+					+ "('GamerX', 'securePass123', 'gamerx@example.com'), "
+					+ "('ProPlayer77', 'propass77', 'proplayer77@example.com'), "
+					+ "('NoobMaster', 'noob12345', 'noobmaster@example.com'), "
+					+ "('EliteGamer', 'eliteG@me!', 'elitegamer@example.com'), "
+					+ "('FastClicker', 'clicker9876', 'fastclicker@example.com'), "
+					+ "('SharpShooter', 'sh@rpShooter', 'sharpshooter@example.com'), "
+					+ "('StealthKing', 'ste@lthRocks', 'stealthking@example.com'), "
+					+ "('BattleQueen', 'queenBattle9', 'battlequeen@example.com'), "
+					+ "('Strategist99', 'planAhead99', 'strategist99@example.com'), "
+					+ "('SpeedyGonzalez', 'speedPass!23', 'speedygonzalez@example.com');";
 
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
@@ -71,6 +79,11 @@ public class TablaPlayer {
 		}
 	}
 
+	/**
+	 * Realiza una consulta de todos los datos en la tabla
+	 * 
+	 * @throws SQLException
+	 */
 	public static void consultaTablaPlayer() throws SQLException {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		Statement stmt = null;
@@ -110,13 +123,22 @@ public class TablaPlayer {
 		}
 	}
 
-	public static void insertarTabla(int idPlayer, String nick, String password, String email) throws Exception {
+	/**
+	 * Inserta una nueva fila en la tabla compras los valores pasados po parametros
+	 * son los valores delos campos de la tabla
+	 * 
+	 * @param nick
+	 * @param password
+	 * @param email
+	 * @throws Exception
+	 */
+	public static void insertarTabla(String nick, String password, String email) throws Exception {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		PreparedStatement stmt = null;
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
-			String sql = "INSERT INTO Player (idPlayer, Nick, password, email) VALUES (" + idPlayer + ", '" + nick
-					+ "', '" + password + "', '" + email + "');";
+			String sql = "INSERT INTO Player (Nick, password, email) VALUES ( '" + nick + "', '" + password + "', '"
+					+ email + "');";
 
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
@@ -138,13 +160,22 @@ public class TablaPlayer {
 		}
 	}
 
+	/**
+	 * Actualiza la tabla compras recibe por parametro el campo ,un nuevo valor y el
+	 * id de la fila a actualizaar
+	 * 
+	 * @param campo
+	 * @param nuevoValor
+	 * @param filtro
+	 * @throws Exception
+	 */
 	public static void updateTabla(String campo, String nuevoValor, String filtro) throws Exception {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		PreparedStatement stmt = null;
 
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
-			String sql = "UPDATE Player SET " + campo + " = " + nuevoValor + " WHERE " + filtro; 
+			String sql = "UPDATE Player SET " + campo + " = " + nuevoValor + " WHERE " + filtro;
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
 
@@ -165,6 +196,11 @@ public class TablaPlayer {
 		}
 	}
 
+	/**
+	 * Elimina la tabla
+	 * 
+	 * @throws Exception
+	 */
 	public static void eliminarTablaPlayer() throws Exception {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		Statement stmt = null;

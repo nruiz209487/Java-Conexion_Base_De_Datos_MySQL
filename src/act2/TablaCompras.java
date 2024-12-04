@@ -10,10 +10,12 @@ import java.sql.Statement;
 
 public class TablaCompras {
 
-
+	/**
+	 * Crea la tabla en la BD
+	 */
 	public static void creacionTablaCompras() {
-		String sql = "CREATE TABLE IF NOT EXISTS Compras (" + "idCompra INT PRIMARY KEY, " + 
-				"idPlayer INT NOT NULL, " + "idGames INT NOT NULL, " + "Cosa VARCHAR(25), " + "Precio DECIMAL(6,2), "
+		String sql = "CREATE TABLE IF NOT EXISTS Compras (" + "idCompra INT AUTO_INCREMENT  PRIMARY KEY, "
+				+ "idPlayer INT NOT NULL, " + "idGames INT NOT NULL, " + "Cosa VARCHAR(25), " + "Precio DECIMAL(6,2), "
 				+ "FechaCompra DATE, " + "FOREIGN KEY (idPlayer) REFERENCES Player(idPlayer), "
 				+ "FOREIGN KEY (idGames) REFERENCES Games(idGames)" + ");";
 
@@ -30,19 +32,24 @@ public class TablaCompras {
 		}
 	}
 
+	/**
+	 * iiNSERTA UNA SERIE DE VALORES EN LA TABLA compras (SIMPLEMENTE PARA TENER
+	 * ALGO CON LO QUE TRABAJAR )
+	 * 
+	 * @throws Exception
+	 */
 	public static void inicializarTabla() throws Exception {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		PreparedStatement stmt = null;
 		String sql = "";
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
-			sql = "INSERT INTO Compras (idCompra, idPlayer, idGames, Cosa, Precio, FechaCompra) VALUES "
-					+ "(1, 1, 2, 'Skin', 9.99, '2024-11-01'), "
-					+ "(2, 2, 3, 'Pase de Temporada', 19.99, '2024-11-05'), "
-					+ "(3, 3, 1, 'DLC', 14.99, '2024-11-07'), " + "(4, 4, 5, 'Arma', 4.99, '2024-11-10'), "
-					+ "(5, 5, 4, 'Mapa', 7.49, '2024-11-15'), " + "(6, 6, 8, 'Vehículo', 12.99, '2024-11-20'), "
-					+ "(7, 7, 7, 'Personaje', 11.49, '2024-11-22'), " + "(8, 8, 10, 'Accesorio', 5.99, '2024-11-25'), "
-					+ "(9, 9, 9, 'Boost', 3.99, '2024-11-26'), " + "(10, 10, 6, 'Expansion', 24.99, '2024-11-27');";
+			sql = "INSERT INTO Compras (idPlayer, idGames, Cosa, Precio, FechaCompra) VALUES "
+					+ "( 1, 2, 'Skin', 9.99, '2024-11-01'), " + "( 2, 3, 'Pase de Temporada', 19.99, '2024-11-05'), "
+					+ "( 3, 1, 'DLC', 14.99, '2024-11-07'), " + "( 4, 5, 'Arma', 4.99, '2024-11-10'), "
+					+ "( 5, 4, 'Mapa', 7.49, '2024-11-15'), " + "( 6, 8, 'Vehículo', 12.99, '2024-11-20'), "
+					+ "( 7, 7, 'Personaje', 11.49, '2024-11-22'), " + "( 8, 10, 'Accesorio', 5.99, '2024-11-25'), "
+					+ "( 9, 9, 'Boost', 3.99, '2024-11-26'), " + "( 10, 6, 'Expansion', 24.99, '2024-11-27');";
 
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
@@ -64,7 +71,9 @@ public class TablaCompras {
 		}
 	}
 
-
+	/**
+	 * Realiza una consulta de todos los datos en la tabla compras
+	 */
 	public static void consultaTablaCompras() {
 		String sql = "SELECT idCompra, idPlayer, idGames, Cosa, Precio, FechaCompra FROM Compras;";
 
@@ -91,14 +100,25 @@ public class TablaCompras {
 		}
 	}
 
-	public static void insertarTabla(int idCompra, int idPlayer, int idGames, String cosa, double precio,
-			Date fechaCompra) throws Exception {
+	/**
+	 * Inserta una nueva fila en la tabla compras los valores pasados po parametros
+	 * son los valores delos campos de la tabla
+	 * 
+	 * @param idPlayer
+	 * @param idGames
+	 * @param cosa
+	 * @param precio
+	 * @param fechaCompra
+	 * @throws Exception
+	 */
+	public static void insertarTabla(int idPlayer, int idGames, String cosa, double precio, Date fechaCompra)
+			throws Exception {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		PreparedStatement stmt = null;
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
-			String sql = "INSERT INTO Compras (idCompra, idPlayer, idGames, cosa, precio) VALUES (" + idCompra + ", "
-					+ idPlayer + ", " + idGames + ", '" + cosa + "', " + precio + ");";
+			String sql = "INSERT INTO Compras (idPlayer, idGames, cosa, precio, FechaCompra) VALUES (" + idPlayer + ", "
+					+ idGames + ", '" + cosa + "', " + precio + ", '" + fechaCompra + "');";
 
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
@@ -120,6 +140,15 @@ public class TablaCompras {
 		}
 	}
 
+	/**
+	 * Actualiza la tabla compras recibe por parametro el campo,un nuevo valor y el
+	 * id de la fila a actualizaar
+	 * 
+	 * @param campo
+	 * @param nuevoValor
+	 * @param filtro
+	 * @throws Exception
+	 */
 	public static void updateTabla(String campo, String nuevoValor, String filtro) throws Exception {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		PreparedStatement stmt = null;
@@ -147,6 +176,9 @@ public class TablaCompras {
 		}
 	}
 
+	/**
+	 * Elimina la tabla
+	 */
 	public static void eliminarTablaCompras() {
 		String sql = "DROP TABLE IF EXISTS Compras;";
 

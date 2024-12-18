@@ -1,3 +1,4 @@
+
 package act2;
 
 import java.sql.Connection;
@@ -19,13 +20,10 @@ public class TablaGame {
 		try (Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 				Statement stmt = conn.createStatement()) {
 
-			System.out.println("Nos hemos conectado a la BBDD");
 			stmt.executeUpdate(sql);
-			System.out.println("Creación de tabla Games completada correctamente.");
 
 		} catch (SQLException e) {
 			System.err.println("Error al crear la tabla Games.");
-			e.printStackTrace();
 		}
 	}
 
@@ -39,7 +37,9 @@ public class TablaGame {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		PreparedStatement stmt = null;
 		String sql = "";
+		creacionTablaGames();
 		try {
+
 			System.out.println("Nos hemos conectado a la BBDD");
 			sql = "INSERT INTO Games (Nombre, tiempoJugado) VALUES " + "( 'Call of Duty', '01:30:00'), "
 					+ "( 'Minecraft', '05:20:00'), " + "('FIFA 23', '02:15:00'), " + "( 'Among Us', '00:45:00'), "
@@ -49,9 +49,7 @@ public class TablaGame {
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
 		} catch (SQLException se) {
-			se.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Error al inicilizar la tabla.");
 		} finally {
 			try {
 				if (stmt != null) {
@@ -67,27 +65,40 @@ public class TablaGame {
 	}
 
 	/**
-	 * Realiza una consulta de todos los datos en la tabla
+	 * Realiza una consulta de todos los datos en la tabla, con la opción de filtrar
+	 * por nombre.
 	 */
-	public static void consultaTablaGames() {
-		String sql = "SELECT idGames, Nombre, tiempoJugado FROM Games;";
+	public static void consultaTablaGames(String filtro) {
+		String sql = "SELECT idGames, Nombre, tiempoJugado FROM Games";
+
+		if (filtro != null && !filtro.trim().isEmpty()) {
+			sql += " WHERE Nombre LIKE ?";
+		}
+
+		creacionTablaGames();
 
 		try (Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			if (filtro != null && !filtro.trim().isEmpty()) {
+				pstmt.setString(1, "%" + filtro + "%");
+			}
 
 			System.out.println("Consultando la tabla Games...");
-			while (rs.next()) {
-				int idGames = rs.getInt("idGames");
-				String nombre = rs.getString("Nombre");
-				String tiempoJugado = rs.getString("tiempoJugado");
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					int idGames = rs.getInt("idGames");
+					String nombre = rs.getString("Nombre");
+					String tiempoJugado = rs.getString("tiempoJugado");
 
-				System.out.println("ID Game: " + idGames + ", Nombre: " + nombre + ", Tiempo Jugado: " + tiempoJugado);
+					System.out.println(
+							"ID Game: " + idGames + ", Nombre: " + nombre + ", Tiempo Jugado: " + tiempoJugado);
+				}
 			}
 
 		} catch (SQLException e) {
 			System.err.println("Error al consultar la tabla Games.");
-			e.printStackTrace();
+
 		}
 	}
 
@@ -103,6 +114,7 @@ public class TablaGame {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		PreparedStatement stmt = null;
 		try {
+			creacionTablaGames();
 			System.out.println("Nos hemos conectado a la BBDD");
 			String sql = "INSERT INTO Games ( Nombre, tiempoJugado) VALUES ( '" + nombre + "', ' " + tiempoJugado
 					+ "');";
@@ -110,9 +122,7 @@ public class TablaGame {
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
 		} catch (SQLException se) {
-			se.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Error al insertar la tabla Games.");
 		} finally {
 			try {
 				if (stmt != null) {
@@ -141,6 +151,7 @@ public class TablaGame {
 		PreparedStatement stmt = null;
 
 		try {
+			creacionTablaGames();
 			System.out.println("Nos hemos conectado a la BBDD");
 			String sql = "UPDATE Games SET " + campo + " = " + nuevoValor + " WHERE " + filtro;
 			stmt = conn.prepareStatement(sql);
@@ -148,9 +159,7 @@ public class TablaGame {
 
 			System.out.println("Registro actualizado correctamente.");
 		} catch (SQLException se) {
-			se.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Error al actualizar.");
 		} finally {
 			try {
 				if (stmt != null)
@@ -160,6 +169,29 @@ public class TablaGame {
 			} catch (SQLException se) {
 				System.out.println("No se ha podido cerrar la conexión.");
 			}
+		}
+	}
+
+	/**
+	 * elimina un registro por id
+	 * 
+	 * @param id
+	 * @throws Exception
+	 */
+	public static void eliminarRegsitro(String id) throws Exception {
+		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
+		Statement stmt = null;
+		try {
+			System.out.println("Nos hemos conectado a la BBDD");
+			stmt = conn.createStatement();
+			String sql = "delete from Games where idGames= " + id + " ;";
+			stmt.executeUpdate(sql);
+		} catch (SQLException se) {
+			System.err.println("Error al eliminar.  " + se);
+		} finally {
+			stmt.close();
+			conn.close();
+			System.out.println("Eliminacion correcta");
 		}
 	}
 
@@ -178,7 +210,6 @@ public class TablaGame {
 
 		} catch (SQLException e) {
 			System.err.println("Error al eliminar la tabla Games.");
-			e.printStackTrace();
 		}
 	}
 }

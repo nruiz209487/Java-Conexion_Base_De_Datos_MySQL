@@ -17,18 +17,15 @@ public class TablaCompras {
 		String sql = "CREATE TABLE IF NOT EXISTS Compras (" + "idCompra INT AUTO_INCREMENT  PRIMARY KEY, "
 				+ "idPlayer INT NOT NULL, " + "idGames INT NOT NULL, " + "Cosa VARCHAR(25), " + "Precio DECIMAL(6,2), "
 				+ "FechaCompra DATE, " + "FOREIGN KEY (idPlayer) REFERENCES Player(idPlayer), "
-				+ "FOREIGN KEY (idGames) REFERENCES Games(idGames)" + ");";
+				+ "FOREIGN KEY (idGames) REFERENCES Games(idGames)  " + ");";
 
 		try (Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 				Statement stmt = conn.createStatement()) {
 
-			System.out.println("Nos hemos conectado a la BBDD");
 			stmt.executeUpdate(sql);
-			System.out.println("Creación de la tabla Compras completada correctamente.");
 
 		} catch (SQLException e) {
 			System.err.println("Error al crear la tabla Compras.");
-			e.printStackTrace();
 		}
 	}
 
@@ -42,6 +39,7 @@ public class TablaCompras {
 		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
 		PreparedStatement stmt = null;
 		String sql = "";
+		creacionTablaCompras();
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
 			sql = "INSERT INTO Compras (idPlayer, idGames, Cosa, Precio, FechaCompra) VALUES "
@@ -54,9 +52,7 @@ public class TablaCompras {
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
 		} catch (SQLException se) {
-			se.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Error al inicializar tabla.");
 		} finally {
 			try {
 				if (stmt != null) {
@@ -74,29 +70,46 @@ public class TablaCompras {
 	/**
 	 * Realiza una consulta de todos los datos en la tabla compras
 	 */
-	public static void consultaTablaCompras() {
-		String sql = "SELECT idCompra, idPlayer, idGames, Cosa, Precio, FechaCompra FROM Compras;";
+	public static void consultaTablaCompras(String filtro) {
+		String sql = "SELECT idCompra, idPlayer, idGames, Cosa, Precio, FechaCompra FROM Compras";
+
+		if (filtro != null && !filtro.trim().isEmpty()) {
+			sql += " WHERE idCompra = ?";
+		}
+
+		creacionTablaCompras();
 
 		try (Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql)) {
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+			if (filtro != null && !filtro.trim().isEmpty()) {
+				try {
+					pstmt.setInt(1, Integer.parseInt(filtro));
+				} catch (NumberFormatException e) {
+					System.err.println(
+							"El filtro proporcionado no es un número válido. Por favor, ingrese un ID numérico.");
+					return;
+				}
+			}
 
 			System.out.println("Consultando la tabla Compras...");
-			while (rs.next()) {
-				int idCompra = rs.getInt("idCompra");
-				int idPlayer = rs.getInt("idPlayer");
-				int idGames = rs.getInt("idGames");
-				String cosa = rs.getString("Cosa");
-				double precio = rs.getDouble("Precio");
-				Date fechaCompra = rs.getDate("FechaCompra");
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					int idCompra = rs.getInt("idCompra");
+					int idPlayer = rs.getInt("idPlayer");
+					int idGames = rs.getInt("idGames");
+					String cosa = rs.getString("Cosa");
+					double precio = rs.getDouble("Precio");
+					Date fechaCompra = rs.getDate("FechaCompra");
 
-				System.out.println("ID Compra: " + idCompra + ", ID Player: " + idPlayer + ", ID Games: " + idGames
-						+ ", Cosa: " + cosa + ", Precio: " + precio + ", Fecha de Compra: " + fechaCompra);
+					System.out.println("ID Compra: " + idCompra + ", ID Player: " + idPlayer + ", ID Games: " + idGames
+							+ ", Cosa: " + cosa + ", Precio: " + precio + ", Fecha de Compra: " + fechaCompra);
+				}
 			}
 
 		} catch (SQLException e) {
 			System.err.println("Error al consultar la tabla Compras.");
-			e.printStackTrace();
+
 		}
 	}
 
@@ -117,15 +130,14 @@ public class TablaCompras {
 		PreparedStatement stmt = null;
 		try {
 			System.out.println("Nos hemos conectado a la BBDD");
+			creacionTablaCompras();
 			String sql = "INSERT INTO Compras (idPlayer, idGames, cosa, precio, FechaCompra) VALUES (" + idPlayer + ", "
 					+ idGames + ", '" + cosa + "', " + precio + ", '" + fechaCompra + "');";
 
 			stmt = conn.prepareStatement(sql);
 			stmt.executeUpdate();
 		} catch (SQLException se) {
-			se.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Error al insertar la tabla.");
 		} finally {
 			try {
 				if (stmt != null) {
@@ -154,6 +166,7 @@ public class TablaCompras {
 		PreparedStatement stmt = null;
 
 		try {
+			creacionTablaCompras();
 			System.out.println("Nos hemos conectado a la BBDD");
 			String sql = "UPDATE Compras SET " + campo + " = " + nuevoValor + " WHERE " + filtro;
 			stmt = conn.prepareStatement(sql);
@@ -161,9 +174,7 @@ public class TablaCompras {
 
 			System.out.println("Registro actualizado correctamente.");
 		} catch (SQLException se) {
-			se.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+			System.err.println("Error al actuaizar la tabla.");
 		} finally {
 			try {
 				if (stmt != null)
@@ -173,6 +184,29 @@ public class TablaCompras {
 			} catch (SQLException se) {
 				System.out.println("No se ha podido cerrar la conexión.");
 			}
+		}
+	}
+
+	/**
+	 * elimna un registro
+	 * 
+	 * @param id
+	 * @throws Exception
+	 */
+	public static void eliminarRegsitro(String id) throws Exception {
+		Connection conn = DriverManager.getConnection(Main.URL, Main.USUARIO, Main.CONTRASENYA);
+		Statement stmt = null;
+		try {
+			System.out.println("Nos hemos conectado a la BBDD");
+			stmt = conn.createStatement();
+			String sql = "delete from Compras where idPlayer= " + id + " ;";
+			stmt.executeUpdate(sql);
+		} catch (SQLException se) {
+			System.err.println("Error al eliminar en tabla Compras.");
+		} finally {
+			stmt.close();
+			conn.close();
+			System.out.println("Eliminacion correcta");
 		}
 	}
 
@@ -191,7 +225,6 @@ public class TablaCompras {
 
 		} catch (SQLException e) {
 			System.err.println("Error al eliminar la tabla Compras.");
-			e.printStackTrace();
 		}
 	}
 }

@@ -21,11 +21,10 @@ public class Main {
 
 	public static final void main(String[] args) {
 		scanner = new Scanner(System.in);
-
 		boolean salida = false;
 		int opcion = 0;
 		probarConexion(); // Verificamos la conexión a la base de datos antes de empezar el menú
-
+		String filtro;
 		while (!salida) {
 			menu(); // Mostrar el menú de opciones
 			System.out.println("Escoja una opción:" + "\n");
@@ -41,6 +40,7 @@ public class Main {
 					TablaGame.creacionTablaGames();
 					TablaPlayer.creacionTablaPlayer();
 					TablaCompras.creacionTablaCompras();
+					System.out.println("Creación de tablas completada correctamente.");
 				} catch (Exception e) {
 					System.err.println("Error al crear las tablas puebe a eliminar todas las tablas");
 				}
@@ -48,24 +48,28 @@ public class Main {
 			case 2:
 				try {
 					TablaGame.creacionTablaGames();
+					System.out.println("Creación de tablas completada correctamente.");
+
 				} catch (Exception e) {
-					System.err.println("Error al crear la TablaGame: La tabla ya esta creada  ");
+					System.err.println("Error al crear la TablaGame:");
 				}
+
 				break;
 			case 3:
 				try {
 					TablaPlayer.creacionTablaPlayer();
+					System.out.println("Creación de tablas completada correctamente.");
+
 				} catch (Exception e) {
-					System.err.println("Error al crear la TablaPlayer:  La tabla ya esta creada" + e.getMessage());
+					System.err.println("Error al crear la TablaPlayer: ");
 				}
 				break;
 			case 4:
 				try {
 					TablaCompras.creacionTablaCompras();
+					System.out.println("Creación de tablas completada correctamente.");
 				} catch (Exception e) {
-					System.err.println(
-							"Error al crear la TablaCompras: No puede ser creada sin las tablas  Payer y Game o  La tabla ya esta creada"
-									+ e.getMessage());
+					System.err.println("Error al crear la TablaCompras: ");
 				}
 				break;
 			case 5:
@@ -75,103 +79,141 @@ public class Main {
 					TablaPlayer.inicializarTabla();
 					TablaCompras.inicializarTabla();
 				} catch (Exception e) {
-					System.err.println("Error al inicializar las tablas: Pruebe a voler a crearlas ");
+					System.err.println("Error al inicializar las tablas:  ");
 				}
 				break;
 			case 6:
 				try {
 					TablaGame.inicializarTabla();
 				} catch (Exception e) {
-					System.err.println("Error al inicializar la TablaGame: tabla no creada ");
+					System.err.println("Error al inicializar la TablaGame: ");
 				}
 				break;
 			case 7:
 				try {
 					TablaPlayer.inicializarTabla();
 				} catch (Exception e) {
-					System.err.println("Error al inicializar la TablaPlayer: tabla no creada ");
+					System.err.println("Error al inicializar la TablaPlayer: ");
 				}
 				break;
 			case 8:
 				try {
 					TablaCompras.inicializarTabla();
 				} catch (Exception e) {
-					System.err.println("Error al inicializar la TablaCompras: tabla no creada ");
+					System.err.println("Error al inicializar la TablaCompras: ");
 				}
 				break;
 			case 9:
 				try {
 					insertarTablaGame();
 				} catch (Exception e) {
-					System.err.println("Error al insertar en la TablaGame:  tabla no creada");
+					System.err.println("Error al insertar en la TablaGame: ");
 				}
 				break;
 			case 10:
 				try {
 					insertarTablaPlayer();
 				} catch (Exception e) {
-					System.err.println("Error al insertar en la TablaPlayer: tabla no creada ");
+					System.err.println("Error al insertar en la TablaPlayer: ");
 				}
 				break;
 			case 11:
 				try {
 					insertarTablaCompra();
 				} catch (Exception e) {
-					System.err.println("Error al insertar en la TablaCompras: tabla no creada ");
+					System.err.println("Error al insertar en la TablaCompras:  ");
 				}
 				break;
 			case 12:
 				try {
 					updateTablaGame();
 				} catch (Exception e) {
-					System.err.println("Error al actualizar la TablaGame: El id no existe  ");
+					System.err.println("Error al actualizar la TablaGame:  ");
 				}
 				break;
 			case 13:
 				try {
 					updateTablaPlayer();
 				} catch (Exception e) {
-					System.err.println("Error al actualizar la TablaPlayer:  El id no existe");
+					System.err.println("Error al actualizar la TablaPlayer: ");
 				}
 				break;
 			case 14:
 				try {
 					updateTablaCompras();
 				} catch (Exception e) {
-					System.err.println("Error al actualizar la TablaCompras: El id no existe ");
+					System.err.println("Error al actualizar la TablaCompras:");
 				}
 				break;
 			case 15:
 				try {
-					TablaGame.consultaTablaGames();
+					System.out
+							.println("Ingrese el nombre del juego para filtrar (deje en blanco para consultar todo):");
+					filtro = scanner.nextLine();
+					TablaGame.consultaTablaGames(filtro);
 				} catch (Exception e) {
-					System.err.println("Error al consultar la TablaGame: La tabla no existe ");
+					System.err.println("Error al consultar la TablaGame: ");
 				}
 				break;
 			case 16:
 				try {
-					TablaPlayer.consultaTablaPlayer();
+					System.out.println(
+							"Ingrese el nombre del jugador para filtrar (deje en blanco para consultar todo):");
+					filtro = scanner.nextLine();
+					TablaPlayer.consultaTablaPlayer(filtro);
 				} catch (Exception e) {
-					System.err.println("Error al consultar la TablaPlayer: La tabla no existe");
+					System.err.println("Error al consultar la TablaPlayer:");
 				}
 				break;
 			case 17:
 				try {
-					TablaCompras.consultaTablaCompras();
+					System.out.println("Ingrese el ID de la compra para filtrar (deje en blanco para consultar todo):");
+					filtro = scanner.nextLine();
+					TablaCompras.consultaTablaCompras(filtro);
 				} catch (Exception e) {
 					System.err.println("Error al consultar la TablaCompras: La tabla no existe");
 				}
 				break;
 			case 18:
 				try {
-					TablaGame.consultaTablaGames();
-					TablaPlayer.consultaTablaPlayer();
-					TablaCompras.consultaTablaCompras();
+					TablaGame.consultaTablaGames("");
+					TablaPlayer.consultaTablaPlayer("");
+					TablaCompras.consultaTablaCompras("");
 				} catch (Exception e) {
 					System.err.println("Error al consultar todas las tablas: ");
 				}
 				break;
 			case 19:
+				try {
+					System.out.println("Ingrese el ID a eliminar");
+					filtro = scanner.nextLine();
+					TablaGame.eliminarRegsitro(filtro);
+
+				} catch (Exception e) {
+					System.err.println("Error al eliminar las tablas:Las tabls no existen ");
+				}
+				break;
+			case 20:
+				try {
+					System.out.println("Ingrese el ID a eliminar");
+					filtro = scanner.nextLine();
+					TablaPlayer.eliminarRegsitro(filtro);
+				} catch (Exception e) {
+					System.err.println("Error al eliminar las tablas:Las tabls no existen ");
+				}
+				break;
+			case 21:
+				try {
+
+					System.out.println("Ingrese el ID a eliminar");
+					filtro = scanner.nextLine();
+					TablaCompras.eliminarRegsitro(filtro);
+
+				} catch (Exception e) {
+					System.err.println("Error al eliminar las tablas:Las tabls no existen ");
+				}
+				break;
+			case 22:
 				try {
 					TablaCompras.eliminarTablaCompras();
 					TablaGame.eliminarTablaGames();
@@ -230,7 +272,10 @@ public class Main {
 		System.out.println("16-Consultar TablaPlayer");
 		System.out.println("17-Consultar TablaCompras");
 		System.out.println("18-Consultar todas las tablas");
-		System.out.println("19-Eliminar todas las tablas");
+		System.out.println("19-Eliminar de TablaGame");
+		System.out.println("20-Eliminar de  TablaPlayer");
+		System.out.println("21-Eliminar de  TablaCompras");
+		System.out.println("22-Eliminar todas las tablas");
 		System.out.println("0- Salir");
 	}
 
@@ -241,18 +286,23 @@ public class Main {
 	 * @throws Exception
 	 */
 	private static void insertarTablaCompra() throws Exception {
-		int idPlayer;
-		int idGames;
+		int idPlayer = 0;
+		int idGames = 0;
 		String cosa;
 		double precio;
 		String fechaStr;
 		Date fechaCompra;
-		System.out.println("Ingrese el ID del Player:");
-		idPlayer = scanner.nextInt();
-		System.out.println("Ingrese el ID del Juego:");
-		idGames = scanner.nextInt();
-		scanner.nextLine();
-		System.out.println("Ingrese la descripción (cosa):");
+		try {
+			System.out.println("Ingrese el ID del Player:");
+			idPlayer = scanner.nextInt();
+			System.out.println("Ingrese el ID del Juego:");
+			idGames = scanner.nextInt();
+			scanner.nextLine();
+			System.out.println("Ingrese la descripción (cosa):");
+		} catch (Exception e) {
+			System.err.println("Error: Debes ingresar un número entero válido."); // Mensaje de error
+			scanner.nextLine();
+		}
 		cosa = scanner.nextLine();
 		System.out.println("Ingrese el precio:");
 		precio = scanner.nextDouble();
@@ -260,7 +310,9 @@ public class Main {
 		System.out.println("Ingrese la fecha de compra (YYYY-MM-DD):");
 		fechaStr = scanner.nextLine();
 		fechaCompra = Date.valueOf(fechaStr);
-		TablaCompras.insertarTabla(idPlayer, idGames, cosa, precio, fechaCompra);
+		if (idPlayer != 0 && idGames != 0) {
+			TablaCompras.insertarTabla(idPlayer, idGames, cosa, precio, fechaCompra);
+		}
 		System.out.println("Compra insertada correctamente.");
 	}
 
@@ -312,17 +364,24 @@ public class Main {
 	 * @throws Exception
 	 */
 	private static void updateTablaCompras() throws Exception {
-		int eleccion;
+		int eleccion = 0;
 		String nombreCampo;
 		String nuevoValor;
 		int idCompra;
 		String[] camposValidos = { "idPlayer", "idGames", "Cosa", "Precio", "FechaCompra" };
 		System.out.println("Seleccione el campo que desea actualizar: (1,2,3,4,5)");
 		System.out.println(Arrays.toString(camposValidos));
-		do {
-			System.out.print("Ingrese el número correspondiente al campo: ");
-			eleccion = scanner.nextInt();
-		} while (eleccion < 1 || eleccion > camposValidos.length);
+
+		try {
+			do {
+				System.out.print("Ingrese el número correspondiente al campo: ");
+				eleccion = scanner.nextInt();
+			} while (eleccion < 1 || eleccion > camposValidos.length);
+
+		} catch (Exception e) {
+			System.err.println("Error: Debes ingresar un número entero válido."); // Mensaje de error
+			scanner.nextLine();
+		}
 		nombreCampo = camposValidos[eleccion - 1];
 		System.out.print("Ingrese el nuevo valor para " + nombreCampo + ": ");
 		scanner.nextLine();
@@ -345,15 +404,22 @@ public class Main {
 	private static void updateTablaPlayer() throws Exception {
 		String nuevoValor;
 		int idPlayer;
-		int eleccion;
+		int eleccion = 0;
 		String nombreCampo;
 		String[] camposValidos = { "Nick", "password", "email" };
 		System.out.println("Seleccione el campo que desea actualizar: (1,2,3)");
 		System.out.println(Arrays.toString(camposValidos));
-		do {
-			System.out.print("Ingrese el número correspondiente al campo: ");
-			eleccion = scanner.nextInt();
-		} while (eleccion < 1 || eleccion > camposValidos.length);
+
+		try {
+			do {
+				System.out.print("Ingrese el número correspondiente al campo: ");
+				eleccion = scanner.nextInt();
+			} while (eleccion < 1 || eleccion > camposValidos.length);
+
+		} catch (Exception e) {
+			System.err.println("Error: Debes ingresar un número entero válido."); // Mensaje de error
+			scanner.nextLine();
+		}
 
 		nombreCampo = camposValidos[eleccion - 1];
 		System.out.print("Ingrese el nuevo valor para " + nombreCampo + ": ");
@@ -377,16 +443,22 @@ public class Main {
 	private static void updateTablaGame() throws Exception {
 
 		String[] camposValidos = { "Nombre", "tiempoJugado" };
-		int eleccion;
+		int eleccion = 0;
 		String nuevoValor;
 		int idGames;
 		String nombreCampo;
 		System.out.println("Seleccione el campo que desea actualizar: (1,2)");
 		System.out.println(Arrays.toString(camposValidos));
-		do {
-			System.out.print("Ingrese el número correspondiente al campo: ");
-			eleccion = scanner.nextInt();
-		} while (eleccion < 1 || eleccion > camposValidos.length);
+
+		try {
+			do {
+				System.out.print("Ingrese el número correspondiente al campo: ");
+				eleccion = scanner.nextInt();
+			} while (eleccion < 1 || eleccion > camposValidos.length);
+		} catch (Exception e) {
+			System.err.println("Error: Debes ingresar un número entero válido."); // Mensaje de error
+			scanner.nextLine();
+		}
 
 		nombreCampo = camposValidos[eleccion - 1];
 		System.out.print("Ingrese el nuevo valor para " + nombreCampo + ": ");
